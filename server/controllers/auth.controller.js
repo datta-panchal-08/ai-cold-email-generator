@@ -144,9 +144,9 @@ export const loginUser = async (req, res) => {
 
     const userRes = user.toObject();
 
-    delete userres?.password;
-    delete userres?.otp;
-    delete userres?.otpExpiry;
+    delete userRes?.password;
+    delete userRes?.otp;
+    delete userRes?.otpExpiry;
 
     return res.status(200).json({
       message: "Login successful",
