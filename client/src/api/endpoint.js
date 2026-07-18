@@ -1,7 +1,7 @@
 import axios from "axios";
 
 const axiosInstance = axios.create({
-  baseURL: "http://localhost:3000/api/v1",
+  baseURL: "https://ai-cold-email-generator-rqy7.onrender.com/api/v1",
 });
 
 axiosInstance.interceptors.request.use((config) => {
