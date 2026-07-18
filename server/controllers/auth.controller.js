@@ -42,7 +42,7 @@ export const registerUser = async (req, res) => {
 
         const user = await User.create({ name, email, password, otp, otpExpiry });
         let userRes = user.toObject();
-        userres?.password = null;
+        userRes?.password = null;
         res?.status(201).json({ message: "User registered successfully", success: true, user: userRes });
 
     } catch (error) {
