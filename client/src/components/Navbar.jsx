@@ -14,12 +14,12 @@ const Navbar = () => {
         const logOut = async () => {
             try {
                 const res = await post("/auth/logout");
-                if (res.data.success) {
+                if (res?.data?.success) {
                     toast.success("Logout Successfull");
                     navigate("/login");
                 }
             } catch (error) {
-                toast.error(error.response.data.message);
+                toast.error(error.response.data?.message);
             }
         }
     }, [user])

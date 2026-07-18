@@ -43,8 +43,8 @@ const OtpVerification = () => {
         otp: finalOTP,
       });
 
-      if (data.success) {
-        toast.success(data.message);
+      if (data?.success) {
+        toast.success(data?.message);
         navigate("/login")
       }
     } catch (error) {

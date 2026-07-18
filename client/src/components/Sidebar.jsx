@@ -14,8 +14,8 @@ const Sidebar = () => {
 
             const { data } = await get("/ai/email-history");
 
-            if (data.success) {
-                setHistory(data.history);
+            if (data?.success) {
+                setHistory(data?.history);
             }
         } catch (error) {
             toast.error("Something went wrong");
@@ -31,7 +31,7 @@ const Sidebar = () => {
     const deleteChat = async (chatId) => {
         try {
             const res = await del(`/ai/delete-chat/${chatId}`);
-            if(res.data.success){
+            if(res?.data?.success){
                 getPreviousChats();
             }
         } catch (error) {

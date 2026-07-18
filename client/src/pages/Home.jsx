@@ -35,8 +35,8 @@ const Home = () => {
         }
       );
 
-      if (res.data.success) {
-        setAiEmail(res.data.coldEmail);
+      if (res?.data?.success) {
+        setAiEmail(res?.data?.coldEmail);
         setLastPrompt(prompt);
         setPrompt("");
       }

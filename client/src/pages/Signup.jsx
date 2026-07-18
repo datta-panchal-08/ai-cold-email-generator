@@ -21,8 +21,8 @@ const Signup = () => {
       const { data } = await post("/auth/register", userData);
       navigate("/verify", {
         state: {
-          userId: data.user._id,
-          email: data.user.email,
+          userId: data?.user._id,
+          email: data?.user.email,
         },
       });
     } catch (error) {

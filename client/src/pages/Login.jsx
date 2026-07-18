@@ -18,14 +18,14 @@ const Login = () => {
   const onSubmit = async (userData) => {
     try {
       setLoading(true);
-      const {data} = await post("/auth/login",{email:userData.email,password:userData.password});
-      if(data.success){
-        toast.success(data.message);
-        login(data.user,data.token);
+      const {data} = await post("/auth/login",{email:userdata?.email,password:userdata?.password});
+      if(data?.success){
+        toast.success(data?.message);
+        login(data?.user,data?.token);
         navigate("/home");
       }
     } catch (error) {
-      toast.error(error.response.data.message);
+      toast.error(error.response.data?.message);
     }finally{
       setLoading(false);
     }

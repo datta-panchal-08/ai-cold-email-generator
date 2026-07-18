@@ -24,7 +24,7 @@ app.use('/api/v1/ai', aiRoutes);
 
 app.use(express.static(path.join(_dirname, "/client/dist")));
 app.get("/*splat", (req, res) => {
-    res.sendFile(path.join(_dirname, "client", "dist", "index.html"));
+    res?.sendFile(path.join(_dirname, "client", "dist", "index.html"));
 });
 app.listen(PORT, () => {
     console.log(`Server is running on PORT:${PORT}`)

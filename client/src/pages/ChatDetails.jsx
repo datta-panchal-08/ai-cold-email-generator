@@ -16,8 +16,8 @@ const ChatDetails = () => {
     try {
       const { data } = await get(`/ai/email-history/${id}`);
 
-      if (data.success) {
-        setChat(data.chat);
+      if (data?.success) {
+        setChat(data?.chat);
       }
     } catch (error) {
       toast.error("Failed to load chat.");
