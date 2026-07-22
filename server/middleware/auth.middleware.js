@@ -7,8 +7,8 @@ export const isAuthenticated = async (req, res, next) => {
 
     if (!token) {
       return res.status(401).json({
-        message: "Unauthorized",
         success: false,
+        message: "Unauthorized",
       });
     }
 
@@ -17,20 +17,33 @@ export const isAuthenticated = async (req, res, next) => {
     const user = await User.findById(decoded.id);
 
     if (!user) {
-      return res.status(401).json({
-        message: "User not found",
+      return res.status(404).json({
         success: false,
+        message: "User not found",
       });
     }
 
     req.user = user;
+
     next();
   } catch (error) {
-    console.error(error);
+    if (error.name === "TokenExpiredError") {
+      return res.status(401).json({
+        success: false,
+        message: "Session expired. Please login again.",
+      });
+    }
 
-    return res.status(401).json({
-      message: "Invalid or expired token",
+    if (error.name === "JsonWebTokenError") {
+      return res.status(401).json({
+        success: false,
+        message: "Invalid token.",
+      });
+    }
+
+    return res.status(500).json({
       success: false,
+      message: "Internal Server Error",
     });
   }
 };

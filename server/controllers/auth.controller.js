@@ -4,52 +4,89 @@ import jwt from 'jsonwebtoken';
 import User from '../models/user.model.js';
 import sendEmail from '../utils/sendEmail.js';
 
-
 export const registerUser = async (req, res) => {
-    try {
-        const { name, email, password } = req.body;
+  try {
+    const { name, email, password } = req.body;
 
-        if (!name || !email || !password) {
-            return res.status(400).json({ message: "Please fill all the fields", success: false });
-        }
-
-        if (password.length < 6) {
-            return res.status(400).json({ message: "Password must be at least 6 characters", success: false });
-        }
-
-        if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) {
-            return res.status(400).json({ message: "Please enter a valid email", success: false });
-        }
-
-        const existingUser = await User.findOne({ email });
-        if (existingUser) {
-            return res.status(400).json({ message: "User already exists", success: false });
-        }
-
-        const otp = Math.floor(100000 + Math.random() * 900000).toString();
-        const otpExpiry = new Date(Date.now() + 10 * 60 * 1000); // 10 minutes from now
-
-        // OTP Validation
-        try {
-            await sendEmail({
-                to: email,
-                subject: "Your OTP Code For Ai Cold Mail Generator",
-                text: `Your OTP is ${otp}. It will expire in 10 minutes.`
-            })
-        } catch (error) {
-            return res.status(500).json({ message: "Error sending OTP email", success: false });
-        }
-
-        const user = await User.create({ name, email, password, otp, otpExpiry });
-        let userRes = user.toObject();
-        userRes.password = null;
-        res.status(201).json({ message: "User registered successfully", success: true, user: userRes });
-
-    } catch (error) {
-        res.status(500).json({ message: "Internal server error", success: false });
+    if (!name || !email || !password) {
+      return res.status(400).json({
+        message: "Please fill all the fields",
+        success: false,
+      });
     }
-}
 
+    if (password.length < 6) {
+      return res.status(400).json({
+        message: "Password must be at least 6 characters",
+        success: false,
+      });
+    }
+
+    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+
+    if (!emailRegex.test(email)) {
+      return res.status(400).json({
+        message: "Please enter a valid email",
+        success: false,
+      });
+    }
+
+    const existingUser = await User.findOne({ email });
+
+    if (existingUser) {
+      return res.status(400).json({
+        message: "User already exists",
+        success: false,
+      });
+    }
+
+    const otp = Math.floor(100000 + Math.random() * 900000).toString();
+
+    const otpExpiry = new Date(Date.now() + 10 * 60 * 1000);
+
+    const user = await User.create({
+      name,
+      email,
+      password,
+      otp,
+      otpExpiry,
+    });
+
+    try {
+      await sendEmail({
+        to: email,
+        subject: "Your OTP Code For AI Cold Mail Generator",
+        text: `Your OTP is ${otp}. It will expire in 10 minutes.`,
+      });
+    } catch (error) {
+      console.log("Email Error:", error.message);
+
+      await User.findByIdAndDelete(user._id);
+
+      return res.status(500).json({
+        message: "Error sending OTP email",
+        success: false,
+      });
+    }
+
+    const userResponse = user.toObject();
+    delete userResponse.password;
+
+    return res.status(201).json({
+      message: "User registered successfully",
+      success: true,
+      user: userResponse,
+    });
+
+  } catch (error) {
+    console.log("Register Error:", error);
+
+    return res.status(500).json({
+      message: error.message || "Internal server error",
+      success: false,
+    });
+  }
+};
 export const verifyOTP = async (req, res) => {
     try {
         const { email, otp } = req.body;
