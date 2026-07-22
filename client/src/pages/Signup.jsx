@@ -113,9 +113,12 @@ const Signup = () => {
           
           <button
             type="submit"
+            disabled={loading}
             className="bg-blue-600 hover:bg-blue-700 transition text-white font-semibold py-3 rounded-lg cursor-pointer"
           >
-            Create Account
+            {
+              loading ? "Please Wait..." : "Create Account"
+            }
           </button>
         </form>
 
