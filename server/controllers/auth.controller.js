@@ -69,13 +69,9 @@ export const registerUser = async (req, res) => {
       });
     }
 
-    const userResponse = user.toObject();
-    delete userResponse.password;
-
     return res.status(201).json({
       message: "User registered successfully",
       success: true,
-      user: userResponse,
     });
 
   } catch (error) {
